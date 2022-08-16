@@ -1,0 +1,73 @@
+{% extends 'templates/app.twig' %}
+
+{% block content %}
+    <div>
+
+    <div class="calendar-content">
+        <div class="calendar-header">
+            <button id="prev"><</button>
+            <h2><span id="months"> </span><span id="years"> </span></h2>
+            <button id="next">></button>
+        </div>
+
+        <div id="calendar-content" id="">
+
+        </div>
+    </div>
+
+    <div class="modal-container"
+         id="modal_container">
+        <div class="modal">
+            <h1 id="modalTitle"></h1>
+            {#            <p> <?php GetAppointmentFromASpecificDate(); ?> </p>#}
+
+            {#            <?php#}
+            {#        if (GetAppointmentFromASpecificDate()) {#}
+            {#            echo '<p> Aceasta zi are deja o rezervare!</p>';#}
+            {#            } else {#}
+            {#            echo "<form method=\"post\"><p>Name: $first_name_sesion  $last_name_sesion</p><input type=\"submit\"></form>";#}
+
+            {#            }#}
+            {#            ?>#}
+
+            <button id="close">
+                Inchide
+
+            </button>
+        </div>
+    </div>
+    </div>
+
+    <div>
+        <button >
+            <a href="{{ route('reservation') }}">Adauga o rezervare</a>
+
+
+            </button>
+    </div>
+
+    {#    <?php#}
+    {#function GetAppointmentFromASpecificDate()#}
+    {#{#}
+    {#    $pdo = new PDO('mysql:dbname=tutorial;host=mysql', 'tutorial', 'secret', [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);#}
+    {#    $query = "SELECT * FROM appointments#}
+    {#    INNER JOIN user ON appointments.user_id = user.id#}
+    {#    WHERE appointments.reservation = " . "'" . $_GET['date'] . "'";#}
+    {#    $result = $pdo->query($query);#}
+    {#    $result->setFetchMode(PDO::FETCH_ASSOC);#}
+    {#    $rez = $result->fetch();#}
+    {#    $dif = $rez['first_name'] ?? "";#}
+    {#    if ($dif) {#}
+
+    {#    while ($row = $result->fetch()) {#}
+
+    {#    echo "Dl/Dna " . $row['first_name'] . " " . $row['last_name'] . "</br>";#}
+    {#    }#}
+    {#    return 1;#}
+    {#    } else {#}
+    {#    return 0;#}
+    {#    }#}
+    {#    }#}
+
+
+{% endblock %}
