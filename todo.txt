@@ -1,8 +1,5 @@
-controller nou pt calendar
-ruta noua pt calendar
-view nou pt calendar
-
 modal: ajax
 1. verific care sunt locatiile rezervate
 2. verific care nu sunt rezervate si pe acelea le afisez
+
 

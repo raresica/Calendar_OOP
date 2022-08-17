@@ -27,6 +27,8 @@ $router->group('', function (RouteGroup $router) {
 
     $router->get('/reservation', [ReservationController::class, 'index'])->setName('reservation');
 
+    $router->post('/reservation', [ReservationController::class, 'store'])->setName('reservation.store');
+
 
 
 })->middleware($container->get(Authenticated::class));
