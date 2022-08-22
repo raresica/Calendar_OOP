@@ -16,8 +16,6 @@ class CalendarController
 
     public function index(ServerRequestInterface $request): ResponseInterface
     {
-//        dd($request->getQueryParams());
-
         return $this->view->render(new Response, 'templates/calendar.twig');
     }
 }

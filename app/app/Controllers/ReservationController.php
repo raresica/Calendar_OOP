@@ -22,8 +22,12 @@ class ReservationController extends Controller
     public function index(ServerRequestInterface $request): ResponseInterface
     {
         $locations = $this->db->getRepository(Location::class)->findAll();
+        $urldate= substr($_SERVER['HTTP_REFERER'],36);
+    //dd($_SERVER['REQUEST_URI']);
         //dd($this->db->getRepository(Appointment::class)->findAll());
-        return $this->view->render(new Response, 'templates/reservation.twig',['locations'=> $locations]);
+        $urldate = \DateTime::createFromFormat('Y-m-d', $urldate);
+        $urldate = $urldate->format('Y-m-d');
+        return $this->view->render(new Response, 'templates/reservation.twig',['locations'=> $locations, 'urldate'=> $urldate]);
 
     }
 //----Create appointment----
@@ -40,10 +44,10 @@ class ReservationController extends Controller
 
     protected function createAppointment(array $data): Appointment
     {
-
         $appointment = new Appointment();
         $location= $this->db->getRepository(Location::class)->find($data['location']);
         $reservation = \DateTime::createFromFormat('Y-m-d', $data['date']);
+
 
         $appointment->fill([
             'reservation' => $reservation,

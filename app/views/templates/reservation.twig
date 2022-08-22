@@ -1,7 +1,7 @@
 {% extends 'templates/app.twig' %}
 
 {% block content %}
-
+    {{ dump(urldate) }}
     <div class="flex flex-col justify-center py-44 sm:px-6 lg:px-8">
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
             <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">Make an appointment</h2>
@@ -14,7 +14,7 @@
                     <div>
                         <label for="date" class="block text-sm font-medium text-gray-700"> Date </label>
                         <div class="mt-1">
-                            <input id="date" name="date" type="date" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <input id="date" name="date" type="date" value="{{ urldate }}" class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
 
                         </div>
                     </div>
