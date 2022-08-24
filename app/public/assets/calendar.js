@@ -56,7 +56,7 @@ window.onload = function () {
         } else {
             m.innerHTML = mm[curMonth + 1];
             showDate(curYear, curMonth + 1);
-            console.log("asdasdasdsadasdsadsa")
+
         }
     }
 
@@ -123,17 +123,17 @@ var showDate = function (year, month) {
     close.addEventListener('click', () => {
         modal_container.classList.remove('show');
         window.location.search = '';
+
     })
     if (window.location.search != '') {
         modal_container.classList.add('show');
 
-
         const urlParams = new URLSearchParams(window.location.search);
         const date = urlParams.get('date');
         const curMonth = date.split("-")[1];
-        console.log(curMonth);
         const day = date.split("-")[2]
         document.getElementById('modalTitle').innerHTML = "Date: " + day + " " + mm[curMonth - 1] + " " + curYear;
+        document.getElementById('selected_date').setAttribute("value", date);
 
 
     }

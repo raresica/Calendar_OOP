@@ -9,12 +9,13 @@ use App\Entities\Appointment;
 use App\Views\View;
 use Doctrine\ORM\EntityManager;
 use Laminas\Diactoros\Response;
+use League\Route\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class ReservationController extends Controller
 {
-    public function __construct(protected View $view, protected EntityManager $db, protected Auth $auth)
+    public function __construct(protected View $view,protected Router $router, protected EntityManager $db, protected Auth $auth)
     {
 
     }
@@ -22,24 +23,30 @@ class ReservationController extends Controller
     public function index(ServerRequestInterface $request): ResponseInterface
     {
         $locations = $this->db->getRepository(Location::class)->findAll();
-        $urldate= substr($_SERVER['HTTP_REFERER'],36);
-    //dd($_SERVER['REQUEST_URI']);
+        //dd($_SERVER['REQUEST_URI']);
         //dd($this->db->getRepository(Appointment::class)->findAll());
+
+//        $urldate= substr($_SERVER['HTTP_REFERER'],36);
+//        dd($request->getQueryParams());
+        $urldate= $request->getQueryParams()["date"];
         $urldate = \DateTime::createFromFormat('Y-m-d', $urldate);
+
         $urldate = $urldate->format('Y-m-d');
         return $this->view->render(new Response, 'templates/reservation.twig',['locations'=> $locations, 'urldate'=> $urldate]);
 
     }
-//----Create appointment----
+//----Create appointment----$request->getQueryParams()
 
      public function store(ServerRequestInterface $request): ResponseInterface
 
     {
+//        dd($request->getParsedBody()['date']);
         $data = $this->validateAppointment($request);
 
         $this->createAppointment($data);
-
-        return $this->view->render(new Response, 'templates/calendar.twig');
+         //dd($request->getQueryParams());
+        //return $this->view->render(new Response, 'templates/calendar.twig');
+         return redirect($this->router->getNamedRoute('calendar')->getPath());
     }
 
     protected function createAppointment(array $data): Appointment

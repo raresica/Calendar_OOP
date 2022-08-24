@@ -1,5 +1,9 @@
-modal: ajax
-1. verific care sunt locatiile rezervate
-2. verific care nu sunt rezervate si pe acelea le afisez
+* sa afisez lista de rezervari pentru fiecare zi in modal
 
+
+*validari:
+
+1.nu poti sa faci rezervari in trecut
+2.un user nu poate sa faca rezervare in aceeasi zi pentru mai mult de o zi
+3.sa fie limitat nr de rezervari diferit pentru fiecare locatie
 
