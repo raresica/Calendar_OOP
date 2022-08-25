@@ -117,7 +117,8 @@ var showDate = function (year, month) {
     document.querySelectorAll('.weekdays').forEach(day => {
         day.addEventListener('click', () => {
             const currentMonthAsStr = currentMonth < 10 ? ("0"+currentMonth) : currentMonth;
-            window.location.search = 'date=' + curYear + "-" + currentMonthAsStr + "-" + day.innerHTML;
+            const currentDayAsStr = day.innerHTML < 10 ? ("0"+String(day.innerHTML)) : day.innerHTML;
+            window.location.search = 'date=' + curYear + "-" + currentMonthAsStr + "-" + String(currentDayAsStr);
         })
     })
 

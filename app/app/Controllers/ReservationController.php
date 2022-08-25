@@ -6,6 +6,7 @@ namespace App\Controllers;
 use App\Auth\Auth;
 use App\Entities\Location;
 use App\Entities\Appointment;
+use App\Session\Flash;
 use App\Views\View;
 use Doctrine\ORM\EntityManager;
 use Laminas\Diactoros\Response;
@@ -15,7 +16,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class ReservationController extends Controller
 {
-    public function __construct(protected View $view,protected Router $router, protected EntityManager $db, protected Auth $auth)
+    public function __construct(protected View $view,protected Router $router, protected Flash $flash, protected EntityManager $db, protected Auth $auth)
     {
 
     }
@@ -40,17 +41,29 @@ class ReservationController extends Controller
      public function store(ServerRequestInterface $request): ResponseInterface
 
     {
-//        dd($request->getParsedBody()['date']);
         $data = $this->validateAppointment($request);
+        if ($this->validateTodayReservation($data))
+        {
+            $this->createAppointment($data);
+            return redirect($this->router->getNamedRoute('calendar')->getPath());
+        }
 
-        $this->createAppointment($data);
-         //dd($request->getQueryParams());
-        //return $this->view->render(new Response, 'templates/calendar.twig');
+         $this->flash->now('error', 'You can not make an appointment on the same day');
          return redirect($this->router->getNamedRoute('calendar')->getPath());
+
+
     }
+
+//        dd($request->getParsedBody()['date']);
+
+
+//        $this->createAppointment($data);
+//         return redirect($this->router->getNamedRoute('calendar')->getPath());
+
 
     protected function createAppointment(array $data): Appointment
     {
+
         $appointment = new Appointment();
         $location= $this->db->getRepository(Location::class)->find($data['location']);
         $reservation = \DateTime::createFromFormat('Y-m-d', $data['date']);
@@ -68,15 +81,32 @@ class ReservationController extends Controller
         return $appointment;
     }
     private function validateAppointment(ServerRequestInterface $request): array
+
     {
 
         return $this->validate($request, [
             'date' => ['required'],
             'location' => ['required'],
 
-
         ]);
 
     }
+
+        private function validateTodayReservation(array $data): bool
+    {
+        $reservationToday = $this->db->getRepository(Appointment::class)->count([
+            'reservation' => \DateTime::createFromFormat('Y-m-d', $data['date']),
+            'user' => $this->auth->user()
+        ]);
+        if (($reservationToday != 0))
+            return false;
+        else {
+            return true;
+        }
+    }
+
+
+
+
 
 }
