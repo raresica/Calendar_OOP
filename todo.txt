@@ -1,9 +1,4 @@
-* sa afisez lista de rezervari pentru fiecare zi in modal
-
-
-*validari:
-
-1.nu poti sa faci rezervari in trecut
-2.un user nu poate sa faca rezervare in aceeasi zi pentru mai mult de o zi
-3.sa fie limitat nr de rezervari diferit pentru fiecare locatie
+redenumit tabele(plural)
+din url
+sa ascund butonul de rezervare pentru trecut
 

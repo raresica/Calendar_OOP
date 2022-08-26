@@ -24,11 +24,6 @@ class ReservationController extends Controller
     public function index(ServerRequestInterface $request): ResponseInterface
     {
         $locations = $this->db->getRepository(Location::class)->findAll();
-        //dd($_SERVER['REQUEST_URI']);
-        //dd($this->db->getRepository(Appointment::class)->findAll());
-
-//        $urldate= substr($_SERVER['HTTP_REFERER'],36);
-//        dd($request->getQueryParams());
         $urldate = $request->getQueryParams()["date"];
         $urldate = \DateTime::createFromFormat('Y-m-d', $urldate);
 
@@ -37,67 +32,39 @@ class ReservationController extends Controller
 
     }
 
-//----Create appointment----$request->getQueryParams()
-
     public function store(ServerRequestInterface $request): ResponseInterface
 
     {
-//        dd($request);
         $data = $this->validateAppointment($request);
         if ($this->validateTodayReservation($data) && $this->validatePreviousReservation($request->getParsedBody()['date'])) {
             $this->createAppointment($data);
             return redirect($this->router->getNamedRoute('calendar')->getPath());
         } else {
-            $this->flash->now('error', 'You can not make an appointment on the same day');
+            $this->flash->now('error', 'You can not make an appointment on the same day or in a previous day');
         }
-
         return redirect($this->router->getNamedRoute('calendar')->getPath());
-
-
     }
 
-//        dd($request->getParsedBody()['date']);
-
-
-//        $this->createAppointment($data);
-//         return redirect($this->router->getNamedRoute('calendar')->getPath());
-
     private function validateAppointment(ServerRequestInterface $request): array
-
     {
-
         return $this->validate($request, [
             'date' => ['required'],
             'location' => ['required'],
 
         ]);
-
     }
 
     private function validateTodayReservation(array $data): bool
     {
-        $reservationDate = $this->db->getRepository(Appointment::class)->count([
-            'reservation' => \DateTime::createFromFormat('Y-m-d', $data['date']),
-            'user' => $this->auth->user()
-        ]);
-        if (($reservationDate != 0))
-            return false;
-        else {
-            return true;
-        }
+        return $this->db->getRepository(Appointment::class)->count([
+                'reservation' => \DateTime::createFromFormat('Y-m-d', $data['date']),
+                'user' => $this->auth->user()
+            ]) == 0;
     }
 
     private function validatePreviousReservation(string $date): bool
     {
-        $selectedDate = date('Y-m-d', strtotime($date));
-        $todayDate = date('Y-m-d');
-
-
-        if ($selectedDate < $todayDate)
-            return false;
-        else {
-            return true;
-        }
+        return date('Y-m-d', strtotime($date)) < date('Y-m-d');
     }
 
     protected function createAppointment(array $data): Appointment
@@ -107,6 +74,9 @@ class ReservationController extends Controller
         $location = $this->db->getRepository(Location::class)->find($data['location']);
         $reservation = \DateTime::createFromFormat('Y-m-d', $data['date']);
 
+        //foreach (['reservation'=>$reservation,'location'=>$location,'user'=>$this->auth->user()] as $key => $value) {
+          //  $appointment->{$key} = $value;
+        //}
 
         $appointment->fill([
             'reservation' => $reservation,
@@ -114,11 +84,8 @@ class ReservationController extends Controller
             'user' => $this->auth->user(),
         ]);
 
-
         $this->db->persist($appointment);
         $this->db->flush();
         return $appointment;
     }
-
-
 }
